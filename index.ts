@@ -1,5 +1,43 @@
 console.log('Script rodando')
 
+import express from 'express'
+import {PrismaClient} from '@prisma/client'
+
+
+let Userdb 
+
+const User = new PrismaClient()
+
+const API = {
+    App:express(),
+    door:3000,
+    NameApi:'Users'
+}
+
+API.App.use(express.json());
+
+API.App.get('/Users',async (req,res)=>{
+    Userdb = await  User.user.findMany()
+    res.send(Userdb)
+})
+
+API.App.post('/Users', async (req,res)=>{
+    const {Name,Email,Password} = req.body;
+    await User.user.create({
+        data:{Name,Email,Password}
+    })
+    res.status(201).send('Usuario criado com sucesso')
+})
+
+
+
+
+API.App.listen(3000,()=>{
+    console.log('https://localhost:3000')
+})
+
+
+//Banco de dados ficticio
 interface User {
     Nome: string,
     Email: string,
@@ -37,6 +75,4 @@ const DeleteUser = (Password:string) =>{
 }
 
 
-CreateUser('Nicolas', 'NicolasAsafe45@gmail.com', '70250810S')
-DeleteUser('70250810S')
  
