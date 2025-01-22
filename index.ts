@@ -23,13 +23,33 @@ API.App.get('/Users',async (req,res)=>{
 
 API.App.post('/Users', async (req,res)=>{
     const {Name,Email,Password} = req.body;
-    await User.user.create({
-        data:{Name,Email,Password}
-    })
+    await User.user.create({data:{Name,Email,Password}})
     res.status(201).send('Usuario criado com sucesso')
 })
 
+API.App.delete('/Users/:Password', async (req,res)=>{
+    await User.user.delete({
+        where:{
+            Password:req.params.Password
+        }
+    })
+    res.status(204).send('Sucesso ao deletar o usuario')
+})
 
+API.App.put('/Users/:id', async (req,res)=>{
+    const {Name,Email,Password} = req.body
+    await User.user.update({
+        where:{
+            id:req.params.id
+        },
+        data:{
+            Name:Name,
+            Password:Password,
+            Email:Email,
+        }
+    })
+    res.status(200).send('Sucesso ao editar o usuário')
+})
 
 
 API.App.listen(3000,()=>{
